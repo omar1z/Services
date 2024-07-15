@@ -19,6 +19,7 @@ export class AccountComponent {
   onSetTo(status: string) {
     this.accountService.updateAccount(this.id, status)
     // console.log('A server status changed, new status: ' + status);
-    this.loggingService.logStatusChange(status)
+    this.loggingService.logStatusChange(status);
+    this.accountService.statusUpdated.emit(status);
   }
 }
