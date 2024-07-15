@@ -10,6 +10,10 @@
     </div>
   </div>
   <div class="col-xs-12 col-sm-4">
+    <!-- <a routerLink="/servers">Reload Page</a> -->
+     <button class="btn btn-primary" (click)="onReload()">Reload Page</button>
+    <!-- <a routerLink="servers">Reload Page</a> -->
+    <!-- this will give an error since it's added the current path => servers/servers wrong! -->
     <app-edit-server></app-edit-server>
     <hr>
     <app-server></app-server>
