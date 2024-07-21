@@ -1,13 +1,59 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs';
+import { Post } from './post.model';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'http_new1';
+export class AppComponent implements OnInit {
+  loadedPosts: Post[] = [];
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    this.fetchPosts();
+  }
+
+  onCreatePost(postData: Post) {
+    // Send Http request
+    this.http
+      .post<{name: string}>(
+        // 'https://ng-complete-guide-c56d3.firebaseio.com/posts.json',
+        'https://ng-complete-guide-50dba-default-rtdb.firebaseio.com/posts.json',
+        postData
+      )
+      .subscribe(responseData => {
+        console.log(responseData);
+      });
+  }
+
+  onFetchPosts() {
+    // Send Http request
+    this.fetchPosts();
+  }
+
+  onClearPosts() {
+    // Send Http request
+  }
+
+  private fetchPosts(){
+    this.http.get<{ [key: string]: Post }>(
+      'https://ng-complete-guide-50dba-default-rtdb.firebaseio.com/posts.json'
+    ).pipe(map(responseData => {
+      const postArray: Post[] = [];
+      for(const key in responseData) {
+        if(responseData.hasOwnProperty(key)){
+          postArray.push({ ...responseData[key], id:key });
+        }
+      }
+      return postArray;
+    })
+  )
+    .subscribe(posts => {
+      this.loadedPosts = posts;
+    })
+  }
 }
